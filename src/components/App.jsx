@@ -41,13 +41,13 @@ changeFilter=(e)=>{
     }))
   }
   visibleToDo=()=>{
-    const {todos,filter} = this.state 
+    const {todos,} = this.state 
     const normalize = this.state.filter.toLocaleLowerCase()
     return todos.filter(todo=>todo.text.toLocaleLowerCase().includes(normalize))
 
   }
   render(){
-   const {todos,filter} = this.state 
+   const {filter} = this.state 
    const filterToDo = this.visibleToDo()
      
     return(
