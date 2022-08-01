@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Container from './Container';
+import Container from './Container/index';
 import Section from './Section';
 import Notification from './Notification';
 import Feedback from './Feedback';
@@ -7,7 +7,7 @@ import Statistics from './Statistics';
 
 class App extends Component {
   state = {
-    good: 0,
+    good: 1,
     neutral: 0,
     bad: 0,
   };
