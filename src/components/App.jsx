@@ -1,56 +1,68 @@
-import React, { Component } from 'react';
-import Container from './Container';
-import Section from './Section';
-import Notification from './Notification';
-import Feedback from './Feedback';
-import Statistics from './Statistics';
+import React,{Component} from 'react';
+import { nanoid } from 'nanoid'
+// import PropTypes from 'prop-types'
+import ToDoList from './toDoList'
+import ToDoEditor from './toDoEditor/index';
+import Filter from './toDoEditor/filter';
+const uId = nanoid(5)
 
-class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
-
-  handleIncrement = options => {
-    this.setState({
-      [options]: this.state[options] + 1,
-    });
-  };
-  countTotalFeedback = () => {
-    const { good, neutral, bad } = this.state;
-    return good + neutral + bad;
-  };
-  countPositiveFeedbackPercentage = () => {
-    const { good, neutral, bad } = this.state;
-    return Math.round((good / (good + neutral + bad)) * 100);
+class App extends Component{
+  state={
+    todos:[{id:'id-1',text:'Вивчити основи React',completed:false},
+    {id:'id-2',text:'Розібратися с React Router',completed:false},
+    {id:'id-3',text:'Пережити Redux',completed:false},],
+    filter:''
   };
 
-  render() {
-    const { good, neutral, bad } = this.state;
-    const options = Object.keys(this.state);
-    const title = 'Please leave feedback';
-    return (
-      <Container>
-        <Section title={title}>
-          <Feedback
-            options={options}
-            onHandleIncrement={this.handleIncrement}
-          />
-          {this.countTotalFeedback() > 0 ? (
-            <Statistics
-              good={good}
-              neutral={neutral}
-              bad={bad}
-              countTotalFeedback={this.countTotalFeedback}
-              positiveFeedbackPercentage={this.countPositiveFeedbackPercentage}
-            />
-          ) : (
-            <Notification message="There is no feedback" />
-          )}
-        </Section>
-      </Container>
-    );
+addToDo=text=>{
+
+  const todo={
+    id:uId,
+    text,
+    completed:false,
+
+  }
+  this.setState(({todos})=>({todos:[...todos,todo]}))
+}
+
+changeFilter=(e)=>{
+  this.setState({filter:e.currentTarget.value})
+  
+}
+   deleteToDo=id=>{
+    this.setState(prevState=>({todos:prevState.todos.filter(todo=>todo.id!==id)}))
+  };
+  toggleCompleted = toDoId=>{
+    
+    this.setState(({todos}) =>({todos:todos.map(todo=>
+     todo.id===toDoId?{...todo,completed:!todo.completed}:todo
+  ) 
+
+    }))
+  }
+  visibleToDo=()=>{
+    const {todos,filter} = this.state 
+    const normalize = this.state.filter.toLocaleLowerCase()
+    return todos.filter(todo=>todo.text.toLocaleLowerCase().includes(normalize))
+
+  }
+  render(){
+   const {todos,filter} = this.state 
+   const filterToDo = this.visibleToDo()
+     
+    return(
+<>
+<h1>hello</h1>
+<ToDoEditor onSubmit={this.addToDo}/>
+<Filter value={filter} onChange={this.changeFilter}/>
+
+<ToDoList todos={filterToDo} onDeleteToDo={this.deleteToDo} onToggleComleted={this.toggleCompleted}/>
+
+
+</>
+    )
   }
 }
-export default App;
+
+ export default App;
+
