@@ -1,29 +1,56 @@
-import Container from './Container/Container';
-import Profile from './Profile/index';
-import Statistics from './Statistics/index';
-import FriendList from './FriendList/index';
-import TransactionHistory from './TransactionHistory/index';
-import users from './Patch/user.json';
-import data from './Patch/data.json';
-import friends from './Patch/friends.json';
-import transactions from './Patch/transactions.json';
-export const App = () => {
-  return (
-    <main>
+import React, { Component } from 'react';
+import Container from './Container';
+import Section from './Section';
+import Notification from './Notification';
+import Feedback from './Feedback';
+import Statistics from './Statistics';
+
+class App extends Component {
+  state = {
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  };
+
+  handleIncrement = options => {
+    this.setState({
+      [options]: this.state[options] + 1,
+    });
+  };
+  countTotalFeedback = () => {
+    const { good, neutral, bad } = this.state;
+    return good + neutral + bad;
+  };
+  countPositiveFeedbackPercentage = () => {
+    const { good, neutral, bad } = this.state;
+    return Math.round((good / (good + neutral + bad)) * 100);
+  };
+
+  render() {
+    const { good, neutral, bad } = this.state;
+    const options = Object.keys(this.state);
+    const title = 'Please leave feedback';
+    return (
       <Container>
-        <Profile
-          username={users.username}
-          tag={users.tag}
-          location={users.location}
-          avatar={users.avatar}
-          followers={users.stats.followers}
-          views={users.stats.views}
-          likes={users.stats.likes}
-        />
-        <Statistics items={data} />
-        <FriendList friends={friends} />
-        <TransactionHistory items={transactions} />
+        <Section title={title}>
+          <Feedback
+            options={options}
+            onHandleIncrement={this.handleIncrement}
+          />
+          {this.countTotalFeedback() > 0 ? (
+            <Statistics
+              good={good}
+              neutral={neutral}
+              bad={bad}
+              countTotalFeedback={this.countTotalFeedback}
+              positiveFeedbackPercentage={this.countPositiveFeedbackPercentage}
+            />
+          ) : (
+            <Notification message="There is no feedback" />
+          )}
+        </Section>
       </Container>
-    </main>
-  );
-};
+    );
+  }
+}
+export default App;
