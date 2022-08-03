@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 function Container({ children }) {
   return <div className={css.container}>{children}</div>;
 }
-console.log('r')
+
 Container.propTypes = {
   children: PropTypes.object,
 };
