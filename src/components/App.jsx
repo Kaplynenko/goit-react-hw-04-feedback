@@ -14,15 +14,15 @@ const App =()=>{
   const handleIncrement = (option) => {
     switch (option) {
       case 'Good':
-        setGood(counter => counter + 1);
+        setGood(state => state + 1);
         break;
 
       case 'Neutral':
-        setNeutral(counter => counter + 1);
+        setNeutral(state => state + 1);
         break;
 
       case 'Bad':
-        setBad(counter => counter + 1);
+        setBad(state => state + 1);
         break;
 
       default:
